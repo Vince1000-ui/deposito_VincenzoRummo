@@ -71,6 +71,11 @@ class Utente {
     public int getIdUtente() {
         return idUtente;
     }
+
+    // Getter per i film noleggiati
+    public ArrayList<Film> getFilmNoleggiati() {
+        return filmNoleggiati;
+    }
 }
 
 // Classe Videoteca per gestire i film e gli utenti
@@ -115,6 +120,35 @@ class Videoteca {
         }
         return null;
     }
+
+    // Metodo per visualizzare i film disponibili
+    public void mostraFilmDisponibili() {
+        if (collezione.isEmpty()) {
+            System.out.println("Nessun film disponibile nella videoteca.");
+        } else {
+            System.out.println("Film disponibili nella videoteca:");
+            for (Film film : collezione) {
+                System.out.println("- " + film);
+            }
+        }
+    }
+
+    // Metodo per visualizzare i film noleggiati e da chi
+    public void mostraFilmNoleggiati() {
+        boolean noleggiEsistenti = false;
+        for (Utente utente : utenti) {
+            if (!utente.getFilmNoleggiati().isEmpty()) {
+                System.out.println("Film noleggiati da " + utente.getNome() + ":");
+                for (Film film : utente.getFilmNoleggiati()) {
+                    System.out.println("- " + film);
+                }
+                noleggiEsistenti = true;
+            }
+        }
+        if (!noleggiEsistenti) {
+            System.out.println("Nessun film è stato noleggiato.");
+        }
+    }
 }
 
 // Classe principale con metodo per gestire il menu
@@ -134,20 +168,20 @@ public class GestioneVideoteca {
             System.out.println("1. Aggiungi utente");
             System.out.println("2. Aggiungi film alla videoteca");
             System.out.println("3. Noleggia film");
-            System.out.println("4. Esci");
+            System.out.println("4. Mostra film disponibili");
+            System.out.println("5. Mostra film noleggiati e da chi");
+            System.out.println("6. Esci");
             System.out.print("Scegli un'opzione: ");
             scelta = scanner.nextInt();
             scanner.nextLine();
 
             switch (scelta) {
                 case 1:
-                    // Aggiunta di un nuovo utente
                     System.out.print("Inserisci nome utente: ");
                     String nomeUtente = scanner.nextLine();
                     videoteca.registraUtente(new Utente(nomeUtente));
                     break;
                 case 2:
-                    // Aggiunta di un nuovo film
                     System.out.print("Inserisci titolo del film: ");
                     String titoloFilm = scanner.nextLine();
                     System.out.print("Inserisci anno di uscita: ");
@@ -156,7 +190,6 @@ public class GestioneVideoteca {
                     videoteca.aggiungiFilm(new Film(titoloFilm, annoFilm));
                     break;
                 case 3:
-                    // Noleggio di un film da parte di un utente
                     System.out.print("Inserisci nome utente: ");
                     String nomeNoleggio = scanner.nextLine();
                     Utente utente = videoteca.cercaUtente(nomeNoleggio);
@@ -174,12 +207,17 @@ public class GestioneVideoteca {
                     }
                     break;
                 case 4:
-                    // Uscita dal programma
+                    videoteca.mostraFilmDisponibili();
+                    break;
+                case 5:
+                    videoteca.mostraFilmNoleggiati();
+                    break;
+                case 6:
                     System.out.println("Uscita dal sistema.");
                     break;
                 default:
                     System.out.println("Scelta non valida, riprova.");
             }
-        } while (scelta != 4);
+        } while (scelta != 6);
     }
 }
